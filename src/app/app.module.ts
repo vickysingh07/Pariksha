@@ -19,6 +19,8 @@ import{MatCardModule} from '@angular/material/card';
 import {from} from 'rxjs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
+import { AuthInterceptor, AuthInterceptorProviders } from './services/auth.interceptor';
+import { LoginService } from './services/login.service';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatToolbarModule,
     MatIconModule
   ],
-  providers: [],
+  providers: [AuthInterceptorProviders, LoginService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class LoginComponent {
       username: '',
       password: '',
      }
-     constructor(private snack:MatSnackBar, private login:LoginService){}
+     constructor(private snack:MatSnackBar, private login:LoginService, private router:Router){}
      ngOnInit(): void{}
 
      formSubmit(){
@@ -31,9 +32,26 @@ export class LoginComponent {
         });
         return;
       }
-    this.login.generateToken(this.loginData).subscribe((data:any)=>{
+      this.login.generateToken(this.loginData).subscribe((data:any)=>{
         console.log("success");
         console.log(data);
+        this.login.loginUser(data.token);
+        this.login.getCurrentUser().subscribe(
+          (user:any)=>{
+            this.login.setUser(user);
+            console.log(user);
+            if(this.login.getUserRole() == "ADMIN"){
+              //window.location.href = '/admin';
+              this.router.navigate(['admin'])
+            }else if(this.login.getUserRole()=='NORMAL'){
+                //window.location.href = '/user-dashboard';
+                this.router.navigate(['user-dashboard'])
+
+            }else{
+              this.login.logout();
+            }
+          }
+        )
       }, 
       (error)=>{
         console.log("Error!");
